@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="//cdn.bootcss.com/jquery/3.0.0-beta1/jquery.js"></script>
+    <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+</head>
+<body>
+  <div>
+    <div id="box" style="width:500px;height:100px;border:1px solid black;overflow:auto;"></div>
+    <textarea style="width:400px;heigt:100px;float:left;"></textarea>
+    <input type="button" style="padding:10px 32px;float:left;" value="发送"  onclick="ws.send($(this).prev().val())" />
+  </div>
+</body>
+<script type="text/javascript">
+  var uname;
+  var ws;
+  ws = new WebSocket("ws://ubuntu.otokaze.cn:9501");
+
+  ws.onopen = function(){
+    if(!$.cookie('uname')){
+      uname = (uname = prompt('君の名前は？')) ? uname : '名無し';
+      $.cookie('uname',uname);
+      ws.send(JSON.stringify({'action':'add','data':uname}));
+    }
+  };
+  ws.onmessage = function (evt){
+    $('#box').html($('#box').html()+evt.data+"<br>");
+  };
+
+</script>
+</html>
